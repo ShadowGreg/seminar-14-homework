@@ -6,7 +6,7 @@ namespace WebApplication1.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class WeatherForecastController: ControllerBase {
-    private static readonly Dictionary<string, int[]> Temperature = new Dictionary<string, int[]>() {
+    private static readonly Dictionary<string, int[]> Temperature = new() {
         { "Freezing", new[] { -25, -5 } },
         { "Bracing", new[] { -5, 5 } },
         { "Chilly", new[] { 5, 15 } },
@@ -28,17 +28,17 @@ public class WeatherForecastController: ControllerBase {
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get() {
-        return Enumerable.Range(1, 5).Select(index =>
+    public WeatherForecast Get()
+    {
+        string summary = Summaries[Random.Shared.Next(Summaries.Length)];
+        int[] temp = Temperature[summary];
+        const int index = 1;
+
+        return new WeatherForecast
         {
-            var summary = Summaries[Random.Shared.Next(Summaries.Length)];
-            var temp = Temperature[summary];
-            return new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(temp[0], temp[1]),
-                Summary = summary
-            };
-        }).ToArray();
+            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+            TemperatureC = Random.Shared.Next(temp[0], temp[1]),
+            Summary = summary
+        };
     }
 }
